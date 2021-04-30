@@ -32,7 +32,7 @@
 
 
 ## bb tools Installation instructions
-1. Setting up conda environment in ssh
+- Setting up conda environment in ssh
 
   1. Download installer
 
@@ -52,7 +52,7 @@ curl -O https://repo.anaconda.com/archive/Anaconda3-<2019.10>-Linux-x86_64.sh`
   5. Test installation
 `conda list`
 
-2. Install other tools (such as bb tools)
+- Install other tools (such as bb tools)
   1. Create environment
 `conda create -n environmentName`
   2. Activate environment
