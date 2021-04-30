@@ -53,10 +53,13 @@ curl -O https://repo.anaconda.com/archive/Anaconda3-<2019.10>-Linux-x86_64.sh`
 `conda list`
 
 2. Install other tools (such as bb tools)
-  i. Create environment
+    
+    i. Create environment
 `conda create -n environmentName`
-  ii. Activate environment
+   
+   ii. Activate environment
 `conda activate environmentName`
+  
   iii. Install tools
 `conda install -c bbtools`
 
