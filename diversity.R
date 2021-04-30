@@ -1,0 +1,93 @@
+ library (tidyverse)
+library(vegan)
+
+#set working directory, take this out when you make the markdown
+setwd("C:/Users/aarus/Desktop/SI_All_TPM")
+
+#Read in data
+MetaG<-read_tsv("SI_marker_contig_map_MetaG.tsv", col_names = T)
+Dates<-read_csv("SI_Dates.csv", col_names = T)
+
+#Remove data that you don't need, we're going also exclude 165m since it's got low sampling, also, we're going to make sure 
+#the samples are all in the same format
+MetaG<- MetaG %>% filter(!grepl("SI_S2", Sample),
+                         !grepl("SI_S4", Sample),
+                         !grepl("200m_A", Sample),
+                         !grepl("SI_S3_037_125m_MetaG_contig", Sample),
+                         !grepl("SI_S3_037_110m_MetaG_contig", Sample),
+                         !grepl("165m", Sample),
+                         !grepl("p__Aquifica", Taxonomy) )%>%
+  mutate(Sample = gsub("SI_S3", "SI", Sample)) %>%
+  mutate(Sample = gsub ("SI_", "SI", Sample)) %>%
+  mutate(Sample = gsub ("_April2016", "", Sample)) %>%
+  mutate(Sample = gsub ("_August2016", "", Sample)) %>%
+  mutate(Sample = gsub ("_September2016", "", Sample)) %>%
+  mutate(Sample = gsub ("_October2016", "", Sample)) %>%
+  mutate(Sample = gsub ("MG_contig", "m_MetaG_contig", Sample)) %>%
+  #there's a cruise that only has 130m sample, but we can use it for 135m
+  mutate(Sample = gsub ("130m", "135m", Sample)) %>%
+  mutate(Sample = gsub ("MG", "m_MetaG_contig", Sample))
+
+
+#taxonomic ranks
+
+taxa_ranks <- c("Root", "Domain", "Phylum", "Class",
+                "Order", "Family", "Genus", "Species")
+#split taxonomic ranks
+MetaG <- MetaG %>%
+  separate(col = Taxonomy,
+           into = taxa_ranks,
+           sep = "; ", fill = "right", remove = T)
+
+#Reform sample IDs
+MetaG <- MetaG %>% 
+  mutate(Sample = gsub("MetaG_contig", "MetaG", Sample)) %>% 
+  mutate(Sample = gsub("200m_B", "200m", Sample)) %>% 
+  separate(col = Sample,
+           into = c("Cruise", "Depth", "SeqType"),
+           extra = "drop")
+
+#split Sample IDs into Cruise, Depth
+MetaG <- MetaG %>%
+  mutate(Depth.m = as.numeric(gsub('m', '', Depth))) %>% 
+  mutate(Cruise = as.integer(gsub('SI', '', Cruise)))
+
+MetaG_Dates_in <- left_join(MetaG,
+                            Dates,
+                            by=c("Cruise"))
+#filter for NosZ that have an Order classification, the argument for is.na() reflects the rank you want to look at
+NosZ_Order_1<-MetaG_Dates_in %>% filter(Marker=="NosZ", is.na(Order)==F)
+
+
+#This will give you the sum for each unique rank
+NosZ_Order_2<- NosZ_Order_1 %>%
+  group_by(Cruise, Date, Depth, Depth.m, Order) %>%
+  summarise(Sum = sum(Abundance)) %>%
+  ungroup()
+
+
+#next, we'll calculate diversity with the diversity function in the vegan package
+#first, let's make a blank dataframe to write into and set a counter variable
+
+div <-data.frame()
+counter<-1
+
+#Next, we're going to loop through each cruise, depth combination
+for (i in 1:length(unique(NosZ_Order_2$Cruise))){
+  for (j in 1: length(unique(NosZ_Order_2$Depth.m))){
+
+#Here, we're going to filter the combination we want, then select the Rank and Sum columns (giving a NX2 dataframe)  
+    tmp_3<-data.frame(NosZ_Order_2 %>% filter (Depth.m==unique(NosZ_Order_2$Depth.m)[j], 
+                                               Cruise==unique(NosZ_Order_2$Cruise)[i])) %>% select(Order, Sum)
+    
+#Next, we can calculate diversity with various metrics, note that the first column is dropped, since diversity wants a numeric vector    
+    div[counter,1]<-paste(as.character(unique(NosZ_Order_2$Cruise)[i]),as.character(unique(NosZ_Order_2$Depth)[j]), sep="_")
+    div[counter,2]<-diversity(tmp_3[,-1], index="shannon")
+    div[counter,3]<-diversity(tmp_3[,-1], index="invsimpson")
+    div[counter,4]<-diversity(tmp_3[,-1], index="simpson")
+    counter=counter+1
+  }
+}
+
+write.csv
+

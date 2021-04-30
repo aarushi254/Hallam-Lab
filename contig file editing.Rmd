@@ -1,0 +1,140 @@
+---
+title: "Marker contig editing"
+author: "Aarushi Sehgal"
+date: "4/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(stringr)
+library(dplyr)
+library(purrr)
+```
+
+```{r}
+# MetaG contig file
+contig_file_MG <- read.csv("C:/Users/aarus/Desktop/contig_file_MetaG.tsv", sep = "\t")
+contig_file_MG$sampleName <- sub("\\m.*", "", contig_file_MG[,1])         # extracts everything before "m"
+contig_file_MG$Depth <- str_extract(contig_file_MG$sampleName, '[^_]+$')  # extracts string after last occurrence of "_"
+contig_file_MG$Depth <- as.numeric(contig_file_MG$Depth)
+contig_file_MG$length <- as.numeric(contig_file_MG$End_pos) - as.numeric(contig_file_MG$Start_pos) #calculate length of ORF
+contig_file_MG <- contig_file_MG[contig_file_MG$length > 100, ] # removes ORFs with lengths less than 100
+
+#MetaT contig file
+contig_file_MT <- read.csv("C:/Users/aarus/Desktop/contig_file_MetaT.tsv", sep = "\t")
+contig_file_MT$sampleName <- sub("\\m.*", "", contig_file_MT[,1])         # extracts everything before "m"
+contig_file_MT$Depth <- str_extract(contig_file_MT$sampleName, '[^_]+$')  # extracts string after last occurrence of "_"
+contig_file_MT$Depth <- as.numeric(contig_file_MT$Depth)
+contig_file_MT$length <- as.numeric(contig_file_MT$End_pos) - as.numeric(contig_file_MT$Start_pos) #calculate length of ORF
+contig_file_MT <- contig_file_MT[contig_file_MT$length > 100, ] # removes ORFs with lengths less than 100
+head(contig_file_MT)
+```
+
+
+```{r}
+# subset dataset based on gene
+
+NosZ_seqs_MetaG <- contig_file_MG[contig_file_MG$Marker == "NosZ", ]
+NosZ_seqs_MetaT <- contig_file_MT[contig_file_MT$Marker == "NosZ", ]
+
+#NirK_seqs <- contig_marker[contig_marker$Marker == "NirK", ] 
+#NapA_seqs <- contig_marker[contig_marker$Marker == "NapA", ]
+#NifH_seqs <- contig_marker[contig_marker$Marker == "NifH", ]
+#NxrA_seqs <- contig_marker[contig_marker$Marker == "NxrA", ]
+#NxrB_seqs <- contig_marker[contig_marker$Marker == "NxrB", ]
+#NorC_seqs <- contig_marker[contig_marker$Marker == "NorC", ]
+#NirS_seqs <- contig_marker[contig_marker$Marker == "NirS", ]
+
+```
+
+
+```{r}
+KEGG_NosZ_MetaG <- read.csv("C:/Users/aarus/Downloads/NosZ_MetaG_Kegg.top", sep = "\t")
+KEGG_NosZ_MetaT <- read.csv("C:/Users/aarus/Downloads/NosZ_MetaT_Kegg.top", sep = "\t")
+
+#MetaG formatting    
+contig.NosZ_MetaG <- data.frame("use:.SI_034_100m_MetaG_contig_classified.faa_k147_135928_1|NosZ|28_495", "K00376","Bacteria", "Bacteriodetes", "Roseivirga", "fpf:DCC35_17090", 701.819)      
+  
+names(contig.NosZ_MetaG) <- c("Query", "KEGG no.", "Domain", "Phylum", "Class", "Order", "Number")  
+names(KEGG_NosZ_MetaG) <- c("Query", "KEGG no.", "Domain", "Phylum", "Class", "Order", "Number")
+#Using rbind() function to insert above observation  
+NosZ_KEGG_MG <- rbind(KEGG_NosZ_MetaG, contig.NosZ_MetaG) 
+
+#MetaT formatting
+contig.NosZ_MetaT <- data.frame("user:SI042_100m_contig_classified.faa_k147_107835_1|NosZ|1_552", "K00376","Bacteria", "Bacteriodetes", "Myroides", "myr:MYRA21_3248", 951.814)      
+
+names(contig.NosZ_MetaT) <- c("Query", "KEGG no.", "Domain", "Phylum", "Class", "Order", "Number")  
+names(KEGG_NosZ_MetaT) <- c("Query", "KEGG no.", "Domain", "Phylum", "Class", "Order", "Number")
+
+#Using rbind() function to insert above observation  
+NosZ_KEGG_MG <- rbind(KEGG_NosZ_MetaG, contig.NosZ_MetaG) 
+NosZ_KEGG_MT <- rbind(KEGG_NosZ_MetaT, contig.NosZ_MetaT) 
+
+#refining column Query for MetaG
+NosZ_KEGG_MG$Query <- sub("\\|.*", "", NosZ_KEGG_MG[,1])
+NosZ_KEGG_MG$Query <- str_extract(NosZ_KEGG_MG$Query, '[^:]+$')
+NosZ_KEGG_MG$Query <- str_extract(NosZ_KEGG_MG$Query, '[^.faa]+$')
+NosZ_KEGG_MG$Query <- gsub("^\\_","",NosZ_KEGG_MG$Query)
+NosZ_KEGG_MG <- NosZ_KEGG_MG[!duplicated(NosZ_KEGG_MG),]
+
+#refining column Query for MetaT
+NosZ_KEGG_MT$Query <- sub("\\|.*", "", NosZ_KEGG_MT[,1])
+NosZ_KEGG_MT$Query <- str_extract(NosZ_KEGG_MT$Query, '[^:]+$')
+NosZ_KEGG_MT$Query <- str_extract(NosZ_KEGG_MT$Query, '[^.faa]+$')
+NosZ_KEGG_MT$Query <- gsub("^\\_","",NosZ_KEGG_MT$Query)
+NosZ_KEGG_MT <- NosZ_KEGG_MT[!duplicated(NosZ_KEGG_MT),]
+
+#head(NosZ_KEGG_MT)
+```
+
+```{r}
+#Adding Kegg annotations to contig files
+NosZ_seqs_MetaG <- left_join(NosZ_seqs_MetaG, NosZ_KEGG_MG, by = "Query")
+NosZ_seqs_MetaG <- na.omit(NosZ_seqs_MetaG)
+NosZ_seqs_MetaT <- left_join(NosZ_seqs_MetaT, NosZ_KEGG_MT, by = "Query")
+NosZ_seqs_MetaT <- na.omit(NosZ_seqs_MetaT)
+
+#filtering out NosZ by removing cytochromes and other noise using KEGG no for NosZ
+
+NosZ_seqs_MetaG <- NosZ_seqs_MetaG[NosZ_seqs_MetaG$`KEGG no.` == "K00376",]
+NosZ_seqs_MetaT <- NosZ_seqs_MetaT[NosZ_seqs_MetaT$`KEGG no.` == "K00376",]
+
+head(NosZ_seqs_MetaG)
+```
+
+
+```{r}
+NosZ_seqs_MetaG$TreeSAPP_phylum <- sub("\\c_.*", "",NosZ_seqs_MetaG$Taxonomy)
+NosZ_seqs_MetaG$TreeSAPP_phylum <- str_extract(NosZ_seqs_MetaG$TreeSAPP_phylum, '[^p_]+$')
+#NosZ_seqs_MetaG <- NosZ_seqs_MetaG %>% select(-("KEGG no..x":"Number.y")) # remove extra columns
+NosZ_seqs_MetaG
+```
+`
+
+```{r}
+NosZ_seqs_MetaT$TreeSAPP_phylum <- sub("\\c_.*", "",NosZ_seqs_MetaT$Taxonomy)
+NosZ_seqs_MetaT$TreeSAPP_phylum <- str_extract(NosZ_seqs_MetaT$TreeSAPP_phylum, '[^p_]+$')
+#NosZ_seqs_MetaT <- NosZ_seqs_MetaT %>% select(-("KEGG no..x":"Number.y")) # remove extra columns
+head(NosZ_seqs_MetaT)
+```
+
+```{r}
+#subseting cruises of interest
+NosZ_seqs_MetaT$cruise <- sub("_[^_]+$", "", NosZ_seqs_MetaT$sampleName)
+NosZ_seqs_MetaG$cruise <- sub("_[^_]+$", "", NosZ_seqs_MetaG$sampleName)
+
+NosZ_seqs_MetaG <- NosZ_seqs_MetaG[NosZ_seqs_MetaG$cruise == c("SI072", "SI073", "SI074", "SI075"), ]
+NosZ_seqs_MetaT <- NosZ_seqs_MetaT[NosZ_seqs_MetaT$cruise == c("SI072", "SI073", "SI074", "SI075"), ]
+
+NosZ_seqs_MetaG
+#head(NosZ_seqs_MetaT)
+```
+
+```{r}
+# get a copy of the filtered CSV file on desktop
+write.table(NosZ_seqs_MetaG, file='C:/Users/aarus/Desktop/NosZ_seqs_MetaG_subset.csv', quote=FALSE, sep=',', col.names = NA)
+write.table(NosZ_seqs_MetaT, file='C:/Users/aarus/Desktop/NosZ_seqs_MetaT_subset.csv', quote=FALSE, sep=',', col.names = NA)
+```
