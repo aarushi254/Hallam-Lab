@@ -1,6 +1,12 @@
 
 # Hallam-Lab
 
+This document contains
+- locations of all the required files on Shamwow
+- Workflow to create Sequence similarity Networks
+- Workflow to create 3D diversity plots
+- Installation guide for bb tools
+
 ## File Locations
 
 All files can be found here:  
