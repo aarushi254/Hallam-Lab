@@ -1,9 +1,24 @@
 # Hallam-Lab
 
+## File Locations
+
+All files can be found here:
+/mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files
+MetaG faa file name: faa_files_MetaG.faa 
+MetaT faa file name: faa_files_MetaT.faa
+concatonated contig file: contig_marker_map.tsv
+
+Filetered NosZ files:
+
 
 ## Workflow to make a SSN:
+Diagram: 
 
-- Add cruise ID to the headers using the script below 
+
+- Add cruise ID to the headers 
+    - issues faced while developing a script that puts cruise IDs to the headers
+    - script found in Sandbox: `mnt/nfs/sharknado/Sandbox/Julia/TreeSAPP_Outputs_Apr_06_2021/faa_files_header_change`
+
 - Use grep to separate sequences based on enzymes
 `grep -i -A 1 'NapA' * > NapA_enzyme.fna`
 - Cluster each enzyme’s sequences using bb tools to find representative sequences (dedupe overlap clustering method) 
@@ -27,8 +42,12 @@
 
 - get Taxonomy annoations for each sample from contig_marker_map.tsv
 - combine blast.tsv and contig_marker_map.tsv in R
+    - base R was used to do this, however tidyverse has better and easier ways of segratating/combining columns
 - Import to Cytoscape 
 - Annotate depth and Taxonomy
+    - First type of SSN had nodes coloured based on Depth
+    - Second type of SSN had nodes coloured based on taxonomy
+    - Third type of SSN was separated by depth and nodes were coloured based on taxonomy
 
 
 ## bb tools Installation instructions
@@ -60,7 +79,35 @@ curl -O https://repo.anaconda.com/archive/Anaconda3-<2019.10>-Linux-x86_64.sh`
    ii. Activate environment
 `conda activate environmentName`
   
-  iii. Install tools
+   iii. Install tools
 `conda install -c bbtools`
 
+
+## Workflow to create 3D plots
+Diagram: 
+
+  - Add cruise ID to the headers and concatanate files
+    - issues faced while developing a script that puts cruise IDs to the headers
+    - script found in Sandbox: `/mnt/nfs/sharknado/Sandbox/Julia/TreeSAPP_Outputs_Apr_06_2021/faa_files_header_change`
+
+  - Use grep to separate sequences based on enzymes
+  `grep -i -A 1 'NapA' * > NapA_enzyme.fna`
+ 
+  - Put each file on ghostKOALA to find KEGG IDs for each sample to differentiate between a gene sample and cytochrome samples
+      - GhostKOALA also provides taxonomy for all samples
+
+  - combine and filter marker_contig.tsv, KEGG annotation file and geochemistry data in R
+      - filtering performed found here: 
+  
+  - calculate shannon diversity in R
+      - code: 
+
+  - create 3D plots with 
+          X = Depth
+          Y = Time
+          Z = Diversity
+     code:
+     ** Problems with 3D plots:
+     - Time need to be converted into numerical values: either julian dates or use cruise IDs instead
+     - 3D plots should be iterated to make 3D kernel density plots
 
