@@ -111,7 +111,9 @@ Diagram:
       - GhostKOALA also provides taxonomy for all samples
 
   - combine and filter marker_contig.tsv, KEGG annotation file and geochemistry data in R
-      - filtering performed found here: 
+ 
+      - filtering performed found here: https://github.com/aarushi254/Hallam-Lab/blob/main/contig%20file%20editing.Rmd
+ 
   
   - calculate shannon diversity in R
 
@@ -119,11 +121,15 @@ Diagram:
      
 
   - create 3D plots with 
+  
           X = Depth
           Y = Time
           Z = Diversity
-     code:
+          
+     code: https://github.com/aarushi254/Hallam-Lab/blob/main/NosZplots.m
+     
      ** Problems with 3D plots:
+     
      - Time need to be converted into numerical values: either julian dates or use cruise IDs instead
      - 3D plots should be iterated to make 3D kernel density plots
 
