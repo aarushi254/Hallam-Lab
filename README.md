@@ -5,7 +5,7 @@
 
 All files can be found here:  
 /mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files
-        MetaG faa file name: faa_files_MetaG.faa 
+       <br MetaG faa file name: faa_files_MetaG.faa \>
         MetaT faa file name: faa_files_MetaT.faa
 
 
