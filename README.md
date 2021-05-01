@@ -1,3 +1,4 @@
+
 # Hallam-Lab
 
 ## File Locations
@@ -9,11 +10,13 @@ MetaT faa file name: faa_files_MetaT.faa
 concatonated contig file: contig_marker_map.tsv
 
 Filetered NosZ files:
+[NosZ_seqs_MetaG_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408744/NosZ_seqs_MetaG_subset.csv)
+[NosZ_seqs_MetaT_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408746/NosZ_seqs_MetaT_subset.csv)
 
 
 ## Workflow to make a SSN:
 Diagram: 
-
+![SSN workflow (1)](https://user-images.githubusercontent.com/37523738/116767936-08cb9a80-a9e8-11eb-8905-304acd74424c.png)
 
 - Add cruise ID to the headers 
     - issues faced while developing a script that puts cruise IDs to the headers
@@ -85,6 +88,7 @@ curl -O https://repo.anaconda.com/archive/Anaconda3-<2019.10>-Linux-x86_64.sh`
 
 ## Workflow to create 3D plots
 Diagram: 
+![3D plots Workflow](https://user-images.githubusercontent.com/37523738/116767896-dde14680-a9e7-11eb-9489-4347b225f196.png)
 
   - Add cruise ID to the headers and concatanate files
     - issues faced while developing a script that puts cruise IDs to the headers
