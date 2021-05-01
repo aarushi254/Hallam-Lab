@@ -4,18 +4,20 @@
 ## File Locations
 
 All files can be found here:  
-/mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files
+`/mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files`
 
-MetaG faa file name: faa_files_MetaG.faa 
+MetaG faa file name: `faa_files_MetaG.faa` 
 
-MetaT faa file name: faa_files_MetaT.faa
+MetaT faa file name: `faa_files_MetaT.faa`
 
 
-concatonated contig file: contig_marker_map.tsv
+concatonated contig file: `contig_marker_map.tsv`
 
 Filetered NosZ files:
-        [NosZ_seqs_MetaG_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408744/NosZ_seqs_MetaG_subset.csv)
-        [NosZ_seqs_MetaT_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408746/NosZ_seqs_MetaT_subset.csv)
+
+  [NosZ_seqs_MetaG_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408744/NosZ_seqs_MetaG_subset.csv)
+        
+   [NosZ_seqs_MetaT_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408746/NosZ_seqs_MetaT_subset.csv)
 
 
 ## Workflow to make a SSN:
@@ -33,14 +35,18 @@ Diagram:
 (see how to install bb tools below)
 - Blast the representative sequences
   1. make BLAST database
+  
       a. For proteins: (faa)
   `Makeblastdb -in file.fasta -dbtype prot -out prot_db` 
+  
       b. For nucleotides:(fna)
   `Makeblastdb -in file.fasta -dbtype nucl -out nucl_db`  -- for .fna file
 
   2. BLAST database against query
+  
      a. For proteins: (faa)
   `Blastp -db prot_db -query file.fasta -outfmt 6 -out all_v_all.tsv -num_threads 4`
+  
     b. For nucleotides:(fna)
 `Blastn -db NirK -query NirK_cluster.fna -outfmt 6 -out Blast_files/NirK.tsv -num_threads 4`
 
