@@ -114,7 +114,9 @@ Diagram:
       - filtering performed found here: 
   
   - calculate shannon diversity in R
-      - code: 
+
+      - code: https://github.com/aarushi254/Hallam-Lab/blob/main/diversity%20calculation.Rmd
+     
 
   - create 3D plots with 
           X = Depth
