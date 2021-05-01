@@ -5,8 +5,10 @@
 
 All files can be found here:  
 /mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files
-       <br MetaG faa file name: faa_files_MetaG.faa \>
-        MetaT faa file name: faa_files_MetaT.faa
+
+MetaG faa file name: faa_files_MetaG.faa 
+
+MetaT faa file name: faa_files_MetaT.faa
 
 
 concatonated contig file: contig_marker_map.tsv
