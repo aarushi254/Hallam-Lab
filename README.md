@@ -3,15 +3,17 @@
 
 ## File Locations
 
-All files can be found here:
+All files can be found here:  
 /mnt/nfs/sharknado/Sandbox/Aarushi/TreeSAPP_Outputs/TreeSAPP_April21/ORF_files
-MetaG faa file name: faa_files_MetaG.faa 
-MetaT faa file name: faa_files_MetaT.faa
+        MetaG faa file name: faa_files_MetaG.faa 
+        MetaT faa file name: faa_files_MetaT.faa
+
+
 concatonated contig file: contig_marker_map.tsv
 
 Filetered NosZ files:
-[NosZ_seqs_MetaG_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408744/NosZ_seqs_MetaG_subset.csv)
-[NosZ_seqs_MetaT_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408746/NosZ_seqs_MetaT_subset.csv)
+        [NosZ_seqs_MetaG_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408744/NosZ_seqs_MetaG_subset.csv)
+        [NosZ_seqs_MetaT_subset.csv](https://github.com/aarushi254/Hallam-Lab/files/6408746/NosZ_seqs_MetaT_subset.csv)
 
 
 ## Workflow to make a SSN:
